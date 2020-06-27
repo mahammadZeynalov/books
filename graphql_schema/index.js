@@ -17,7 +17,7 @@ const BookType = new GraphQLObjectType({
         short_description: { type: GraphQLString },
         author: { type: GraphQLString },
         photo: { type: GraphQLString },
-        price: { type: GraphQLInt }
+        price: { type: GraphQLString }
     })
 });
 
@@ -63,7 +63,7 @@ const Mutation = new GraphQLObjectType({
                 short_description: { type: new GraphQLNonNull(GraphQLString) },
                 author: { type: new GraphQLNonNull(GraphQLString) },
                 photo: { type: new GraphQLNonNull(GraphQLString) },
-                price: { type: new GraphQLNonNull(GraphQLInt) }
+                price: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve(parent, args) {
                 let book = new Book({
@@ -85,7 +85,7 @@ const Mutation = new GraphQLObjectType({
                 short_description: { type: GraphQLString },
                 author: { type: GraphQLString },
                 photo: { type: GraphQLString },
-                price: { type: GraphQLInt }
+                price: { type: GraphQLString }
             },
             resolve(parent, {id, name, short_description, author, photo, price}) {
                 return Book.findByIdAndUpdate(id, {
