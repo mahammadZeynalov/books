@@ -76,12 +76,12 @@ const Mutation = new GraphQLObjectType({
                     photo: args.photo,
                     price: args.price
                 });
-
+                const savedBook = await book.save();
                 const books = await Book.find()
                 pubsub.publish('bookAdded', {
-                    bookAdded: books
+                    bookAdded: savedBook
                 });
-                return book.save();
+                return savedBook;
             }
         },
 
@@ -122,7 +122,7 @@ const Subscription = new GraphQLObjectType({
     name: 'Subscription',
     fields: () => ({
         bookAdded: {
-            type: GraphQLList(BookType),
+            type: BookType,
             subscribe: () => pubsub.asyncIterator(['bookAdded'])
         }
     })

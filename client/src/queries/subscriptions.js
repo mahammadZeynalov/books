@@ -14,4 +14,7 @@ export const ADD_BOOK_SUBSCRIPTION = gql`
   }
 `;
 
-export default () => useSubscription(ADD_BOOK_SUBSCRIPTION);
+export default () => {
+    const sub = useSubscription(ADD_BOOK_SUBSCRIPTION)
+    return sub;
+};
