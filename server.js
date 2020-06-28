@@ -4,11 +4,7 @@ const graphqlHTTP = require('express-graphql');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const schema = require('./graphql_schema');
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
+const { ApolloServer } = require('apollo-server');
 
 mongoose.connect(
     process.env.DB_CONNECT,
@@ -20,13 +16,10 @@ mongoose.connect(
     .then(() => console.log('Connected'))
     .catch(err => console.log(err));
 
-app.use('/graphql', graphqlHTTP({
-    schema,
-    graphiql: true
-}));
+let server = new ApolloServer({ schema, tracing: true });
 
-const PORT = process.env.APP_PORT
-
-app.listen(PORT, () => console.log('The server is running on port ', PORT))
+server.listen().then(({ url }) => {
+    console.log(`🚀  Server ready at ${url}`);
+});
 
 

@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-apollo';
-import { GET_BOOKS_QUERY } from '../queries';
+import getBooksQuery from '../queries/queries';
+import addBookSub from '../queries/subscriptions'
 import Book from './Book';
 import ModalAdd from './ModalAdd';
 
 export default function Books() {
-
+    addBookSub();
     const [show, setShow] = useState(false);
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    const { loading, error, data } = useQuery(GET_BOOKS_QUERY)
+    const { loading, error, data } = getBooksQuery();
 
     if (loading) return <div>Loading...</div>
     if (error) {

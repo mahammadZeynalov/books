@@ -8,6 +8,9 @@ const {
     GraphQLInt
 } = require('graphql');
 const Book = require('../modal/Book');
+const { PubSub } = require('graphql-subscriptions');
+
+const pubsub = new PubSub();
 
 const BookType = new GraphQLObjectType({
     name: 'Book',
@@ -65,14 +68,19 @@ const Mutation = new GraphQLObjectType({
                 photo: { type: new GraphQLNonNull(GraphQLString) },
                 price: { type: new GraphQLNonNull(GraphQLString) }
             },
-            resolve(parent, args) {
+            async resolve(parent, args) {
                 let book = new Book({
                     name: args.name,
                     short_description: args.short_description,
                     author: args.author,
                     photo: args.photo,
                     price: args.price
-                })
+                });
+
+                const books = await Book.find()
+                pubsub.publish('bookAdded', {
+                    bookAdded: books
+                });
                 return book.save();
             }
         },
@@ -87,7 +95,7 @@ const Mutation = new GraphQLObjectType({
                 photo: { type: GraphQLString },
                 price: { type: GraphQLString }
             },
-            resolve(parent, {id, name, short_description, author, photo, price}) {
+            resolve(parent, { id, name, short_description, author, photo, price }) {
                 return Book.findByIdAndUpdate(id, {
                     name,
                     short_description,
@@ -108,11 +116,22 @@ const Mutation = new GraphQLObjectType({
             }
         }
     })
+});
+
+const Subscription = new GraphQLObjectType({
+    name: 'Subscription',
+    fields: () => ({
+        bookAdded: {
+            type: GraphQLList(BookType),
+            subscribe: () => pubsub.asyncIterator(['bookAdded'])
+        }
+    })
 })
 
 const schema = new GraphQLSchema({
     query: RootQueryType,
-    mutation: Mutation
+    mutation: Mutation,
+    subscription: Subscription
 })
 
 module.exports = schema;

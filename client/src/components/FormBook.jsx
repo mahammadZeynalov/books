@@ -1,15 +1,16 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-apollo';
-import { ADD_BOOK_MUTATION } from '../queries'
+import { ADD_BOOK_MUTATION } from '../queries/mutations'
 
 export default function FormBook() {
     const { handleSubmit, register, errors } = useForm();
-    const [addBook, {loading, error, data}] = useMutation(ADD_BOOK_MUTATION);
+    const [addBook, { loading }] = useMutation(ADD_BOOK_MUTATION);
     const onSubmit = values => {
         console.log(values);
         addBook({
-            variables: values
+            variables: values,
+            refetchQueries: ['RootQueryType']
         })
     };
 
@@ -20,33 +21,39 @@ export default function FormBook() {
                 name="name"
                 ref={register({ required: true })}
             />
-            {errors.name && <div className = 'text-danger'>Your input is required</div>}
+            {errors.name && <div className='text-danger'>Your input is required</div>}
             <label>Author:</label>
             <input
                 name="author"
                 ref={register({ required: true })}
             />
-            {errors.author && <div className = 'text-danger'>Your input is required</div>}
+            {errors.author && <div className='text-danger'>Your input is required</div>}
             <label>Description:</label>
             <input
                 name="short_description"
                 ref={register({ required: true })}
             />
-            {errors.description && <div className = 'text-danger'>Your input is required</div>}
+            {errors.description && <div className='text-danger'>Your input is required</div>}
             <label>Price:</label>
             <input
                 name="price"
                 ref={register({ required: true, validate: value => !isNaN(value) })}
             />
-            {errors.price && <div className = 'text-danger'>Your input is required and should be a number</div>}
+            {errors.price && <div className='text-danger'>Your input is required and should be a number</div>}
             <label>Photo URL:</label>
             <input
                 name="photo"
                 ref={register({ required: true })}
             />
-            {errors.photo && <div className = 'text-danger'>Your input is required</div>}
+            {errors.photo && <div className='text-danger'>Your input is required</div>}
             <div>
-                <button type="submit" className='btn btn-primary'>Submit</button>
+                <button type="submit" className='btn btn-primary'>Submit
+                </button>
+            </div>
+            <div>
+                {
+                    loading ? 'Loading...' : ''
+                }
             </div>
         </form>
     )
