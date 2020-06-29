@@ -1,26 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import { useMutation } from 'react-apollo';
+import { DELETE_BOOK_MUTATION } from '../queries/mutations';
 
 export default function Book(props) {
-    const {name, author, price, short_description, photo} = props.data
+
+    const { id, name, author, price, short_description, photo } = props.data
+    const [deleteBook] = useMutation(DELETE_BOOK_MUTATION)
+
+    const handleDeleteBook = () => {
+        deleteBook({
+            variables: {
+                id
+            }
+        })
+    }
     return (
-        <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" src={photo} />
-            <Card.Body>
-                <Card.Title>{name}</Card.Title>
-                <Card.Text>
-                    Author: {author}
-                </Card.Text>
-                <Card.Text>
-                    {short_description}
-                </Card.Text>
-                <Card.Text>
-                    Price: {price}
-                </Card.Text>
-                <Button variant="primary">Edit</Button>
-                <Button variant="info">Delete</Button>
-            </Card.Body>
-        </Card>
+        <>
+            <Card style={{ width: '18rem' }}>
+                <div className='book_img'>
+                    <Card.Img variant="top" src={photo} className='book_img' />
+                </div>
+                <Card.Body>
+                    <Card.Title>{name}</Card.Title>
+                    <Card.Text>
+                        <span className='font-weight-bold'>Author:</span>: {author}
+                    </Card.Text>
+                    <Card.Text>
+                        {short_description}
+                    </Card.Text>
+                    <Card.Text>
+                        <span className='font-weight-bold'>Price:</span>  {price}
+                    </Card.Text>
+                    <div className='btns_card'>
+                        {/* <Button variant="primary">Edit</Button> */}
+                        <Button variant="info" onClick={handleDeleteBook}>Delete</Button>
+                    </div>
+                </Card.Body>
+            </Card>
+        </>
     )
 }

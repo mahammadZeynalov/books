@@ -5,7 +5,8 @@ const {
     GraphQLID,
     GraphQLList,
     GraphQLNonNull,
-    GraphQLInt
+    GraphQLInt,
+    defaultTypeResolver
 } = require('graphql');
 const Book = require('../modal/Book');
 const { PubSub } = require('graphql-subscriptions');
@@ -77,7 +78,6 @@ const Mutation = new GraphQLObjectType({
                     price: args.price
                 });
                 const savedBook = await book.save();
-                const books = await Book.find()
                 pubsub.publish('bookAdded', {
                     bookAdded: savedBook
                 });
@@ -111,8 +111,13 @@ const Mutation = new GraphQLObjectType({
             args: {
                 id: { type: GraphQLID }
             },
-            resolve(parent, args) {
-                return Book.findByIdAndDelete(args.id);
+            async resolve(parent, args) {
+                const deletedBook = await Book.findByIdAndDelete(args.id);
+                console.log(deletedBook);
+                pubsub.publish('bookDeleted', {
+                    bookDeleted: deletedBook
+                });
+                return deletedBook;
             }
         }
     })
@@ -124,6 +129,10 @@ const Subscription = new GraphQLObjectType({
         bookAdded: {
             type: BookType,
             subscribe: () => pubsub.asyncIterator(['bookAdded'])
+        },
+        bookDeleted: {
+            type: BookType,
+            subscribe: () => pubsub.asyncIterator(['bookDeleted'])
         }
     })
 })

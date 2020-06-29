@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-// import getBooksQuery from '../queries/queries';
-// import addBookSub from '../queries/subscriptions'
 import Book from './Book';
-import ModalAdd from './ModalAdd';
+import ModalAdd from './AddBook/ModalAdd';
 
-export default function Books({ loading, error, data, subscribeToNewBooks }) {
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
+export default function Books({ loading, error, data, subscribeToNewBooks, subscribeAfterBookDeleted }) {
     useEffect(() => {
         subscribeToNewBooks();
-    }, [])
+        subscribeAfterBookDeleted();
+    }, []);
+
+    const [showAdd, setShowAdd] = useState(false);
+    console.log(showAdd);
+    const handleCloseAdd = () => setShowAdd(false);
+    const handleShowAdd = () => setShowAdd(true);
 
     if (loading) return <div>Loading...</div>
     if (error) {
@@ -21,12 +21,12 @@ export default function Books({ loading, error, data, subscribeToNewBooks }) {
     return (
         <div className='books_container'>
             {
-                data.books.map((book, index) => <Book key={index} data={book} />)
+                data.books.map(book => <Book key={book.id} data={book}/>)
             }
-            <div>
-                <button className='btn btn-primary' onClick={handleShow}>Add new book</button>
+            <div className = 'btn_add'>
+                <button className='btn btn-primary' onClick={handleShowAdd}>Add new book</button>
             </div>
-            <ModalAdd show={show} handleClose={handleClose} />
+            <ModalAdd show = {showAdd} handleClose ={handleCloseAdd}/>
         </div>
     )
 }

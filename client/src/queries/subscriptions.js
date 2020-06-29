@@ -1,5 +1,4 @@
 import gql from "graphql-tag";
-import { useSubscription } from "@apollo/react-hooks";
 
 export const ADD_BOOK_SUBSCRIPTION = gql`
   subscription bookAdded {
@@ -14,7 +13,21 @@ export const ADD_BOOK_SUBSCRIPTION = gql`
   }
 `;
 
-export default () => {
-    const sub = useSubscription(ADD_BOOK_SUBSCRIPTION)
-    return sub;
-};
+export const DELETE_BOOK_SUBSCRIPTION = gql`
+subscription bookDeleted {
+  bookDeleted {
+    id
+  }
+}`
+
+export const UPDATE_BOOK_SUBSCRIPTION = gql`
+subscription bookUpdated {
+  bookUpdated {
+    id
+    name
+    short_description
+    author
+    photo
+    price
+  }
+}`

@@ -1,16 +1,16 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-apollo';
-import { ADD_BOOK_MUTATION } from '../queries/mutations'
+import { ADD_BOOK_MUTATION } from '../../queries/mutations';
+import { useForm } from 'react-hook-form';
 
-export default function FormBook() {
-    const { handleSubmit, register, errors } = useForm();
+export default function FormAdd() {
     const [addBook, { loading }] = useMutation(ADD_BOOK_MUTATION);
+
+    const { handleSubmit, register, errors } = useForm();
+
     const onSubmit = values => {
-        console.log(values);
         addBook({
-            variables: values,
-            refetchQueries: ['RootQueryType']
+            variables: values
         })
     };
 

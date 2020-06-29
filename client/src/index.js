@@ -8,7 +8,6 @@ import { ApolloProvider } from 'react-apollo';
 ReactDOM.render(
   <ApolloProvider client={apolloClient} >
     <App />
-  </ApolloProvider>
-  ,
+  </ApolloProvider>,
   document.getElementById('root')
 );

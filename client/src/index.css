@@ -5,6 +5,7 @@
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 40px;
+  position: relative;
 }
 
 .form {
@@ -12,4 +13,23 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+
+.book_img {
+  width: 250px;
+  height: 250px;
+}
+
+.btns_card {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.btn_add {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
