@@ -6,14 +6,14 @@ import { getMainDefinition } from "apollo-utilities";
 import { InMemoryCache } from "apollo-cache-inmemory";
 
 const wsLink = new WebSocketLink({
-  uri: `ws:/graphql`,
+  uri: `ws://localhost:4000/graphql`,
   options: {
     reconnect: true
   }
 });
 
 const httpLink = new HttpLink({
-  uri: "/graphql"
+  uri: "http://localhost:4000/graphql"
 });
 
 const link = split(
